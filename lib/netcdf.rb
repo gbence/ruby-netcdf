@@ -34,11 +34,19 @@ module NumRu
 	  raise NetcdfError, "We can't use the sharing mode you typed"
        end
        omode = mode | share
-       if(!call_create)
-	  nc_open(filename,omode)
-       else
-	  nc_create(filename,omode)
-       end
+
+       cdf = unless call_create
+               nc_open(filename,omode)
+             else
+               nc_create(filename,omode)
+             end
+
+       return cdf unless block_given?
+
+       yield(cdf)
+       cdf.close
+
+       cdf
     end
     
     class << NetCDF
@@ -65,7 +73,14 @@ module NumRu
       end
       
       cmode=noclobber | share
-      nc_create(filename,cmode)
+      cdf = nc_create(filename,cmode)
+
+      return cdf unless block_given?
+
+      yield(cdf)
+      cdf.close
+
+      cdf
     end
     
     class << NetCDF
