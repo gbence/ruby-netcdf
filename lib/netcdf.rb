@@ -43,10 +43,10 @@ module NumRu
 
        return cdf unless block_given?
 
-       yield(cdf)
+       results = yield(cdf)
        cdf.close
 
-       cdf
+       results
     end
     
     class << NetCDF
@@ -77,10 +77,10 @@ module NumRu
 
       return cdf unless block_given?
 
-      yield(cdf)
+      results = yield(cdf)
       cdf.close
 
-      cdf
+      results
     end
     
     class << NetCDF
